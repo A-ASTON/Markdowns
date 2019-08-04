@@ -1,4 +1,4 @@
-# Study_markdowns
+# Markdowns
 个人学习笔记   
 内容摘自有： 
 - freecodecamp中文社区
