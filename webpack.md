@@ -216,6 +216,7 @@ module.exports = {
 }
 
 
+
 //设置index.js文件使其能接受其下模块的变化
 //index.js
 import _ from 'lodash';
@@ -233,3 +234,12 @@ if (module.hot) {
     })
 }
 ```
+若想将HMR应用于CSS，只需要配置css-loader和style-loader即可
+
+## 代码分离
+>代码分离的好处：此特性能够把代码分离到不同的 bundle 中，然后可以按需加载或并行加载这些文件。代码分离可以用于获取更小的 bundle，以及控制资源加载优先级，如果使用合理，会极大影响加载时间。
+目前三种常用的代码分离方法：
+- 入口起点(entry points):使用`entry`配置手动地分离代码。
+- 防止重复(prevent duplication):使用`SplitChunksPlulgin`去重和分离chunks。
+- 动态导入(dynamic imports):通过痛快的内联函数调用来分离代码。
+- 

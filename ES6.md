@@ -379,3 +379,52 @@ import add from "math_functions";
 add(5,4); //将会返回 9
 // 这个语法只有一处不同的地方 —— 被导入的add值，并没有被花括号{}所包围。与导出值的方法不同，导入默认导出的写法仅仅只是简单的讲变量名写在import之后。
 ```
+## 19.Promise
+### 前置知识：同步和异步
+异步：同一时间做多件事情   
+同步：同一时间只做一件事情，做完一件才能做下一件   
+>异步：JavaScript是单线程的，但是它的运行环境：“浏览器”是多线程的，这是它能实现异步的关键。因此在js中如果碰到一些可能需要耗费一些时间的操作，像setTimeout，ajax的回调函数（称其为异步操作）等，js会将其放入一个代办任务队列taskqueue中，当js按顺序执行完其他同步的，不耗时的操作之后，会去依次执行taskqueue队列中的任务。      
+
+例如：Ajax，定时器函数(setTimeout()和setInterval())，以定时器函数为例，定时器是异步的，先运行其他任务，当到定下的时间时，会将定时器函数的回调函数加入`宏任务`的执行队列中。
+### 宏任务和微任务
+宏任务：普通的script代码（同步代码），setTimeout，setInterval；     
+微任务：process.nextTick，promise.then()   
+而js在执行完同步代码之后，会首先去执行微任务队列中待执行的代码，然后再去执行宏任务中的代码
+
+### Promise
+>Promise 对象是一个代理对象（代理一个值），被代理的值在Promise对象创建时可能是未知的。它允许你为异步操作的成功和失败分别绑定相应的处理方法（handlers）。 这让异步方法可以像同步方法那样返回值，但并不是立即返回最终执行结果，而是一个能代表未来出现的结果的promise对象       
+一个 Promise有以下几种状态:       
+pending: 初始状态，既不是成功，也不是失败状态。     
+fulfilled: 意味着操作成功完成。     
+rejected: 意味着操作失败。            
+    ----MDN
+
+>古人云：“君子一诺千金”，这种“承诺将来会执行”的对象在JavaScript中称为Promise对象,Promies()是一个构造函数，它身上有all\reject\resolve这几个方法，原型上有then\catch等方法。    
+ ----廖雪峰
+
+>（1）对象的状态不受外界影响。Promise对象代表一个异步操作，有三种状态：pending（进行中）、fulfilled（已成功）和rejected（已失败）。只有异步操作的结果，可以决定当前是哪一种状态，任何其他操作都无法改变这个状态。这也是Promise这个名字的由来，它的英语意思就是“承诺”，表示其他手段无法改变。
+
+>（2）一旦状态改变，就不会再变，任何时候都可以得到这个结果。Promise对象的状态改变，只有两种可能：从pending变为fulfilled和从pending变为rejected。只要这两种情况发生，状态就凝固了，不会再变了，会一直保持这个结果，这时就称为 resolved（已定型）。如果改变已经发生了，你再对Promise对象添加回调函数，也会立即得到这个结果。这与事件（Event）完全不同，事件的特点是，如果你错过了它，再去监听，是得不到结果的。
+
+>简单来讲，就是能把原来的回调写法分离出来，在异步操作执行完后，用链式调用的方式执行回调函数。
+
+[使用Promise？](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise) 
+```js
+// 创建一个Promise的实例，并传入参数（该参数为你想要执行的异步函数），最终构造函数将会返回一个Promise实例。此后可以对这一个实例使用，then\catch\all\race等方法，注意本身有resolve和reject方法，代表执行完成或失败传递的变量。
+// 语法：
+new Promise( function(resolve, reject) {...} /* executor */  );
+// executor 函数在Promise构造函数返回所建promise实例对象前被调用
+
+var p1 = new Promise(function(resolve, reject) {   
+  //resolve是将Promise的状态置为fullfiled，reject是将Promise的状态置为rejected
+  setTimeOut(resolve, 100, 'foo');
+});     
+// 接下来就可以用then\catch\all啦
+
+// then方法提供一个供自定义的回调函数，若传入非函数，则会忽略当前then方法。回调函数中会把上一个then中返回的值当做参数值供当前then方法调用。then方法执行完毕后需要返回一个新的值给下一个then调用（没有返回值默认使用undefined）。
+p1.then(function(value) {
+  console.log(value);
+  //expected output:'foo'
+});
+```
+例子可参考:[廖雪峰官网](https://www.liaoxuefeng.com/wiki/1022910821149312/1023024413276544)
